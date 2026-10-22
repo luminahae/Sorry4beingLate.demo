@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>그러니까, 제가 왜 늦었냐면.. — 사과문 생성기</title>
+<meta name="description" content="상황·대상·의도만 입력하면 자동으로 사과문을 만들어줘요. 그러니까, 제가 왜 늦었냐면.." />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Nanum+Pen+Script&family=Gaegu:wght@400;700&family=Gowun+Dodum&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <!-- 브라우저 창 목업 프레임 -->
+  <div class="window">
+    <div class="window__bar">
+      <span class="dot dot--red"></span>
+      <span class="dot dot--amber"></span>
+      <span class="dot dot--green"></span>
+      <div class="window__addr" id="windowAddr">sorry4beinglate.app</div>
+    </div>
+
+    <div class="window__body">
+
+      <!-- ===================== 1. 스플래시 ===================== -->
+      <section class="view view--splash is-active" id="view-splash">
+        <div class="splash">
+          <img src="assets/logo.png" class="logo logo--xl" alt="사과하는 손 로고" />
+          <h1 class="brand-title">그러니까</h1>
+          <p class="brand-sub">제가 왜 늦었냐면..</p>
+
+          <p class="splash__hint">사과(🍎)를 살짝 밀어보세요</p>
+          <div class="dragzone" id="dragzone">
+            <button class="apple-knob" id="appleKnob" aria-label="사과를 밀어서 시작">
+              <img src="assets/logo.png" alt="" />
+            </button>
+            <span class="dragzone__track">밀어서 사과하기 →</span>
+          </div>
+          <button class="ghost-skip" id="skipSplash">그냥 바로 시작 ↵</button>
+        </div>
+      </section>
+
+      <!-- ===================== 2. 입력 ===================== -->
+      <section class="view view--form" id="view-form">
+        <header class="apphead">
+          <img src="assets/logo.png" class="logo logo--sm" alt="로고" />
+          <div class="apphead__text">
+            <span class="apphead__brand">그러니까</span>
+            <span class="apphead__tag">아래를 채우면 <b id="animatedText">사과문을</b> 만들어 드려요</span>
+          </div>
+        </header>
+
+        <form class="form" id="excuseForm" autocomplete="off">
+          <label class="field">
+            <span class="field__label">누구에게 사과하나요? <em>*</em></span>
+            <input type="text" id="to" maxlength="30" placeholder="예) 팀장님, 교수님, 여자친구, 우리 팀 모두" required />
+            <span class="field__count" data-for="to">0/30</span>
+          </label>
+
+          <label class="field">
+            <span class="field__label">무슨 상황인가요? <em>*</em></span>
+            <input type="text" id="intent" maxlength="80" placeholder="예) 중요한 회의에 30분 지각했어요" required />
+            <span class="field__count" data-for="intent">0/80</span>
+          </label>
+
+          <label class="field">
+            <span class="field__label">어떤 의도로 전하고 싶나요? <em>*</em></span>
+            <input type="text" id="goal" maxlength="80" placeholder="예) 진심으로 사과하고 다시는 안 그러겠다고 다짐" required />
+            <span class="field__count" data-for="goal">0/80</span>
+          </label>
+
+          <!-- 관계 · 말투 -->
+          <div class="relation" id="relation">
+            <div class="rel-block">
+              <span class="rel-head">말투</span>
+              <div class="seg" id="registerSeg" role="radiogroup" aria-label="말투">
+                <button type="button" class="seg__btn" data-v="formal" role="radio" aria-checked="false">격식 존댓말<small>~습니다</small></button>
+                <button type="button" class="seg__btn is-on" data-v="polite" role="radio" aria-checked="true">존댓말<small>~해요</small></button>
+                <button type="button" class="seg__btn" data-v="casual" role="radio" aria-checked="false">반말<small>~해</small></button>
+              </div>
+            </div>
+
+            <div class="slider-block">
+              <div class="slider-labels"><span>어려운 사이</span><span>찐친</span></div>
+              <input type="range" id="closeRange" min="0" max="100" value="40" aria-label="친한 정도" />
+              <div class="slider-value"><b id="closeWord">조금 아는</b> 사이로 씁니다</div>
+            </div>
+
+            <label class="strict" id="strictLabel">
+              <input type="checkbox" id="strict" />
+              <span class="strict__box" aria-hidden="true"></span>
+              <span class="strict__text">
+                <b>윗사람·공적인 자리예요</b>
+                <small>교수님·어른께 보낼 때 — 장난 없이 정중하게 써요</small>
+              </span>
+            </label>
+
+            <p class="rel-hint" id="relHint" aria-live="polite"></p>
+          </div>
+
+          <div class="sliders">
+            <div class="slider-block">
+              <div class="slider-labels"><span>장문형</span><span>단문형</span></div>
+              <input type="range" id="lengthRange" min="0" max="100" value="50" />
+            </div>
+            <div class="slider-block">
+              <div class="slider-labels"><span>T형 · 논리·팩트</span><span>감성·공감 · F형</span></div>
+              <input type="range" id="tfRange" min="0" max="100" value="55" />
+              <div class="slider-value"><b id="toneWord">따뜻한</b> 톤으로 씁니다</div>
+            </div>
+          </div>
+
+          <button type="button" class="detail-toggle" id="detailToggle">
+            <span>상세 설정 (선택)</span><span class="chev">▾</span>
+          </button>
+
+          <div class="detail" id="detail" hidden>
+            <label class="field">
+              <span class="field__label">누가 쓰나요? (보내는 사람)</span>
+              <input type="text" id="from" maxlength="20" placeholder="예) 김지각, 늦잠 자버린 신입" />
+              <span class="field__count" data-for="from">0/20</span>
+            </label>
+            <label class="field">
+              <span class="field__label">글의 형식</span>
+              <input type="text" id="type" maxlength="40" placeholder="예) 이메일, 손편지, 카톡 메시지, 사내 공지" />
+              <span class="field__count" data-for="type">0/40</span>
+            </label>
+            <label class="field">
+              <span class="field__label">기타 (꼭 넣고 싶은 말)</span>
+              <input type="text" id="etc" maxlength="60" placeholder="예) 커피 쏘겠다는 약속도 넣어줘" />
+              <span class="field__count" data-for="etc">0/60</span>
+            </label>
+
+            <details class="apikey">
+              <summary>🔑 실제 GPT로 생성하기 (선택)</summary>
+              <p class="apikey__desc">비워두면 내장 생성기가 <b>자동으로</b> 사과문을 만들어요. OpenAI 키를 넣으면 실제 GPT가 씁니다. 키는 이 브라우저에만 저장돼요.</p>
+              <input type="password" id="apikey" placeholder="sk-..." />
+            </details>
+          </div>
+
+          <button type="submit" class="btn btn--primary btn--big" id="generateBtn">사과문 생성하기</button>
+        </form>
+      </section>
+
+      <!-- ===================== 3. 로딩 ===================== -->
+      <section class="view view--loading" id="view-loading">
+        <div class="loading">
+          <div class="loading__spinner"></div>
+          <p class="loading__meme">The perfect loading screen doesn't exi—</p>
+          <p class="loading__status" id="loadingStatus">진심을 문장으로 옮기는 중…</p>
+        </div>
+      </section>
+
+      <!-- ===================== 4. 출력 ===================== -->
+      <section class="view view--result" id="view-result">
+        <header class="apphead apphead--slim">
+          <img src="assets/logo.png" class="logo logo--sm" alt="로고" />
+          <span class="apphead__brand">그러니까</span>
+        </header>
+
+        <article class="letter" id="letter">
+          <h2 class="letter__title" id="letterTitle"></h2>
+          <div class="letter__body" id="letterBody"></div>
+          <div class="letter__sign" id="letterSign"></div>
+        </article>
+
+        <div class="result-actions">
+          <button class="btn btn--ghost" id="editBtn">✏️ 정보 수정</button>
+          <button class="btn btn--ghost" id="regenBtn">🔄 새로고침</button>
+          <button class="btn btn--ghost" id="imageBtn">🖼️ 이미지 저장</button>
+          <button class="btn btn--ghost" id="homeBtn">🏠 홈으로</button>
+          <button class="btn btn--primary" id="copyBtn">📤 복사·공유</button>
+        </div>
+        <div class="toast" id="toast">복사됐어요!</div>
+      </section>
+
+    </div>
+  </div>
+
+  <footer class="site-foot">
+    <span>그러니까, 제가 왜 늦었냐면..</span>
+    <span class="credits"><span>@Jamessung644</span> · <span>@being0606</span> · <span>@2hyunhyung</span> · <span>@lumina.hae</span></span>
+  </footer>
+
+  <script src="app.js"></script>
+</body>
+</html>
